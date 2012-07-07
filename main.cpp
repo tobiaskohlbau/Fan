@@ -164,6 +164,8 @@ int main() {
 			"/sys/devices/platform/applesmc.768/subsystem/devices/coretemp.0",
 			"temp3");
 
+	fan.writeContent(fan.getPath() + "/" + fan.getName() + "_manual", "1");
+
 	fan.setSpeed(fan.getPlanedSpeed());
 
 	double oldTemp = ((coreOne.getTemp() + coreTwo.getTemp()) / 2) / 1000;
