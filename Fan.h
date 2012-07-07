@@ -1,29 +1,18 @@
 #ifndef FAN_H
 #define FAN_H
 
-#include <string>
-#include <fstream>
-#include <stdlib.h>
-#include <sstream>
+#include "Control.h"
 
-class Fan {
+class Fan : public Control {
 private:
-	std::string fanPath;
-	std::string fanName;
 	std::string fanLabel;
 	int fanSpeedCurrent;
 	int fanMinSpeed;
 	int fanMaxSpeed;
-	std::string getContent(std::string path);
-	bool writeContent(std::string path, std::string content);
-	std::string itos(int i);
-	int stoi(std::string s);
 	std::string checkSpeed(int speed);
 public:
 	Fan();
 	Fan(std::string fanPath, std::string fanName);
-	std::string getPath();
-	std::string getName();
 	std::string getLabel();
 	int getSpeedCurrent();
 	int getFanMinSpeed();
