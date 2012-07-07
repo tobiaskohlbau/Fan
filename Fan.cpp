@@ -20,7 +20,14 @@ std::string Fan::itos(int i) {
   iStream << i;
   std::string iString = iStream.str();
   return iString; 
-} 
+}
+
+int Fan::stoi(std::string s) {
+  std::stringstream sStream(s);
+  int i;
+  sStream >> i;
+  return i;
+}
 
 
 std::string Fan::checkSpeed(int speed) {
@@ -38,7 +45,7 @@ Fan::Fan() {
   this->fanPath = "";
   this->fanName = "";
   this->fanLabel = "";
-  this->fanSpeedCurrent = "";
+  this->fanSpeedCurrent = 0;
   this->fanMinSpeed = 0;
   this->fanMaxSpeed = 0;
 }
@@ -47,7 +54,7 @@ Fan::Fan(std::string fanPath, std::string fanName) {
   this->fanPath = fanPath;
   this->fanName = fanName;
   this->fanLabel = getContent(this->fanPath + "/" + this->fanName + "_label");
-  this->fanSpeedCurrent = getContent(this->fanPath + "/" + this->fanName + "_input");
+  this->fanSpeedCurrent = stoi(getContent(this->fanPath + "/" + this->fanName + "_input"));
   this->fanMinSpeed = 3200;
   this->fanMaxSpeed = 6200;
 }
@@ -64,7 +71,7 @@ std::string Fan::getLabel() {
   return this->fanLabel;
 }
 
-std::string Fan::getSpeedCurrent() {
+int Fan::getSpeedCurrent() {
   return this->fanSpeedCurrent;
 }
 
@@ -85,7 +92,7 @@ void Fan::setFanMaxSpeed(int maxSpeed) {
 }
 
 void Fan::refresh() {
- this->fanSpeedCurrent = getContent(this->fanPath + "/" + this->fanName + "_input"); 
+ this->fanSpeedCurrent = stoi(getContent(this->fanPath + "/" + this->fanName + "_input")); 
 }
 
 bool Fan::setSpeed(int speed) {
