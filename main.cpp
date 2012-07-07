@@ -169,44 +169,19 @@ int main() {
 
 	fan.writeContent(fan.getPath() + "/" + fan.getName() + "_manual", "1");
 
-	fan.setSpeed(fan.getFanMaxSpeed());
+	double scaleTo = 0.5;
+	double maxTemp = 75;
 
-	double oldTemp = ((coreOne.getTemp() + coreTwo.getTemp()) / 2) / 1000;
-	double newTemp = oldTemp;
+	int speedFactor = (fan.getFanMaxSpeed() - fan.getFanMinSpeed()) / scaleTo;
 
 	while (1) {
-		syslog(LOG_NOTICE,
-				("Fanspeed: " + itos(fan.getPlannedSpeed())).c_str());
-		syslog(LOG_NOTICE,
-				("Cores: "
-						+ dtos(
-								((coreOne.getTemp() + coreTwo.getTemp()) / 2)
-										/ 1000)).c_str());
-		syslog(LOG_NOTICE, ("Load: " + dtos(load.getAverage())).c_str());
+		fan.setSpeed(fan.getFanMinSpeed() + speedFactor * load.getAverage());
 
-		newTemp = (coreOne.getTemp() + coreTwo.getTemp()) / 1000;
-
-		syslog(LOG_NOTICE, dtos(oldTemp).c_str());
-		syslog(LOG_NOTICE, dtos(newTemp).c_str());
-
-		if (oldTemp - newTemp <= -0.5) {
-			if (oldTemp - newTemp <= -5) {
-				fan.setSpeed(fan.getFanMaxSpeed());
-			} else {
-				fan.setSpeed(fan.getPlannedSpeed() + 1000);
-			}
-			oldTemp = newTemp;
-		} else if (oldTemp - newTemp >= 0) {
-			fan.setSpeed(fan.getPlannedSpeed() - 1000);
-			oldTemp = newTemp;
+		if (((coreOne.getTemp() / 1000) > maxTemp)
+				|| ((coreTwo.getTemp() / 1000) > maxTemp)) {
+			fan.setSpeed(fan.getFanMaxSpeed());
+			syslog(LOG_CRIT, "Temp to high");
 		}
-
-		if (fan.getPlannedSpeed() < 6200) {
-			if (load.getAverage() > 0.5) {
-				fan.setSpeed(fan.getFanMaxSpeed());
-			}
-		}
-
 		sleep(5);
 	}
 
