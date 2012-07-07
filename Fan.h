@@ -20,8 +20,7 @@ public:
 	void setFanMinSpeed(int minSpeed);
 	void setFanMaxSpeed(int maxSpeed);
 	bool setSpeed(int speed);
-	int getPlanedSpeed();
-	void setPlanedSpeed(int speed);
+	int getPlannedSpeed();
 };
 
 #endif

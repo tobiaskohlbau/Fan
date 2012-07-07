@@ -166,12 +166,12 @@ int main() {
 
 	fan.writeContent(fan.getPath() + "/" + fan.getName() + "_manual", "1");
 
-	fan.setSpeed(fan.getPlanedSpeed());
+	fan.setSpeed(fan.getFanMaxSpeed());
 
 	double oldTemp = ((coreOne.getTemp() + coreTwo.getTemp()) / 2) / 1000;
 	double newTemp = oldTemp;
 	while (1) {
-		syslog(LOG_NOTICE, ("Fanspeed: " + itos(fan.getPlanedSpeed())).c_str());
+		syslog(LOG_NOTICE, ("Fanspeed: " + itos(fan.getPlannedSpeed())).c_str());
 		syslog(LOG_NOTICE,
 				("Cores: "
 						+ dtos(
@@ -185,15 +185,13 @@ int main() {
 
 		if (oldTemp - newTemp <= -0.5) {
 			if (oldTemp - newTemp <= -5) {
-				fan.setPlanedSpeed(fan.getFanMaxSpeed());
+				fan.setSpeed(fan.getFanMaxSpeed());
 			} else {
-				fan.setPlanedSpeed(fan.getPlanedSpeed() + 500);
+				fan.setSpeed(fan.getPlannedSpeed() + 500);
 			}
-			fan.setSpeed(fan.getPlanedSpeed());
 			oldTemp = newTemp;
-		} else if (oldTemp - newTemp >= 0.5) {
-			fan.setPlanedSpeed(fan.getPlanedSpeed() - 500);
-			fan.setSpeed(fan.getPlanedSpeed());
+		} else if (oldTemp - newTemp >= 0) {
+			fan.setSpeed(fan.getPlannedSpeed() - 500);
 			oldTemp = newTemp;
 		}
 		sleep(5);

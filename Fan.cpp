@@ -58,10 +58,6 @@ bool Fan::setSpeed(int speed) {
 			itos(checkSpeed(speed)));
 }
 
-int Fan::getPlanedSpeed() {
-	return this->planedSpeed;
-}
-
-void Fan::setPlanedSpeed(int speed) {
-	this->planedSpeed = checkSpeed(speed);
+int Fan::getPlannedSpeed() {
+	return stoi(getContent(getPath() + "/" + getName() + "_output"));
 }
