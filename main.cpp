@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Fan.h"
 #include "Sensor.h"
+#include "Load.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -146,6 +147,7 @@ double calcAverage(double first, double second) {
 }
 
 int main() {
+
 	/* Initialize the logging interface */
 	openlog(DAEMON_NAME, LOG_PID, LOG_LOCAL5);
 	syslog(LOG_INFO, "starting");
@@ -163,6 +165,7 @@ int main() {
 	Sensor coreTwo(
 			"/sys/devices/platform/applesmc.768/subsystem/devices/coretemp.0",
 			"temp3");
+	Load load("/proc", "stat");
 
 	fan.writeContent(fan.getPath() + "/" + fan.getName() + "_manual", "1");
 
@@ -170,13 +173,16 @@ int main() {
 
 	double oldTemp = ((coreOne.getTemp() + coreTwo.getTemp()) / 2) / 1000;
 	double newTemp = oldTemp;
+
 	while (1) {
-		syslog(LOG_NOTICE, ("Fanspeed: " + itos(fan.getPlannedSpeed())).c_str());
+		syslog(LOG_NOTICE,
+				("Fanspeed: " + itos(fan.getPlannedSpeed())).c_str());
 		syslog(LOG_NOTICE,
 				("Cores: "
 						+ dtos(
 								((coreOne.getTemp() + coreTwo.getTemp()) / 2)
 										/ 1000)).c_str());
+		syslog(LOG_NOTICE, ("Load: " + dtos(load.getAverage())).c_str());
 
 		newTemp = (coreOne.getTemp() + coreTwo.getTemp()) / 1000;
 
@@ -187,18 +193,26 @@ int main() {
 			if (oldTemp - newTemp <= -5) {
 				fan.setSpeed(fan.getFanMaxSpeed());
 			} else {
-				fan.setSpeed(fan.getPlannedSpeed() + 500);
+				fan.setSpeed(fan.getPlannedSpeed() + 1000);
 			}
 			oldTemp = newTemp;
 		} else if (oldTemp - newTemp >= 0) {
-			fan.setSpeed(fan.getPlannedSpeed() - 500);
+			fan.setSpeed(fan.getPlannedSpeed() - 1000);
 			oldTemp = newTemp;
 		}
+
+		if (fan.getPlannedSpeed() < 6200) {
+			if (load.getAverage() > 0.5) {
+				fan.setSpeed(fan.getFanMaxSpeed());
+			}
+		}
+
 		sleep(5);
 	}
 
 	/* Finish up */
 	syslog(LOG_NOTICE, "terminated");
 	closelog();
+
 	return 0;
 }

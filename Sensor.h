@@ -10,7 +10,7 @@
 
 #include "Control.h"
 
-class Sensor : public Control {
+class Sensor: public Control {
 private:
 	std::string sensorLabel;
 	double sensorTemp;

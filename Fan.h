@@ -3,7 +3,7 @@
 
 #include "Control.h"
 
-class Fan : public Control {
+class Fan: public Control {
 private:
 	std::string fanLabel;
 	int fanMinSpeed;

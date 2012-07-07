@@ -61,7 +61,6 @@ std::string Control::getName() {
 	return this->controlName;
 }
 
-
 void Control::setPath(std::string path) {
 	this->controlPath = path;
 }
