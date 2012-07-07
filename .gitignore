@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 fan
 *.*.swp
 
-=======
->>>>>>> 54c0e922c1d6d53387301f611aa6f51f0d7a193e
 # Compiled Object files
 *.slo
 *.lo
@@ -16,3 +13,7 @@ fan
 *.lai
 *.la
 *.a
+
+# Eclipse Projectfiles
+.project
+.cproject
