@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Fan.h"
+#include "Sensor.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -133,6 +134,17 @@ std::string itos(int i) {
 	return iString;
 }
 
+std::string dtos(double d) {
+	std::stringstream dStream;
+	dStream << d;
+	std::string dString = dStream.str();
+	return dString;
+}
+
+double calcAverage(double first, double second) {
+	return (first + second) / 2;
+}
+
 int main() {
 	/* Initialize the logging interface */
 	openlog(DAEMON_NAME, LOG_PID, LOG_LOCAL5);
@@ -145,9 +157,45 @@ int main() {
 
 	/* Now we are a daemon -- do the work for which we were paid */
 	Fan fan("/sys/devices/platform/applesmc.768", "fan1");
-	fan.refresh();
+	Sensor coreOne(
+			"/sys/devices/platform/applesmc.768/subsystem/devices/coretemp.0",
+			"temp2");
+	Sensor coreTwo(
+			"/sys/devices/platform/applesmc.768/subsystem/devices/coretemp.0",
+			"temp3");
 
-	syslog(LOG_NOTICE, itos(fan.getSpeedCurrent()).c_str());
+	fan.setSpeed(fan.getPlanedSpeed());
+
+	double oldTemp = ((coreOne.getTemp() + coreTwo.getTemp()) / 2) / 1000;
+	double newTemp = oldTemp;
+	while (1) {
+		syslog(LOG_NOTICE, ("Fanspeed: " + itos(fan.getPlanedSpeed())).c_str());
+		syslog(LOG_NOTICE,
+				("Cores: "
+						+ dtos(
+								((coreOne.getTemp() + coreTwo.getTemp()) / 2)
+										/ 1000)).c_str());
+
+		newTemp = (coreOne.getTemp() + coreTwo.getTemp()) / 1000;
+
+		syslog(LOG_NOTICE, dtos(oldTemp).c_str());
+		syslog(LOG_NOTICE, dtos(newTemp).c_str());
+
+		if (oldTemp - newTemp <= -0.5) {
+			if (oldTemp - newTemp <= -5) {
+				fan.setPlanedSpeed(fan.getFanMaxSpeed());
+			} else {
+				fan.setPlanedSpeed(fan.getPlanedSpeed() + 500);
+			}
+			fan.setSpeed(fan.getPlanedSpeed());
+			oldTemp = newTemp;
+		} else if (oldTemp - newTemp >= 0.5) {
+			fan.setPlanedSpeed(fan.getPlanedSpeed() - 500);
+			fan.setSpeed(fan.getPlanedSpeed());
+			oldTemp = newTemp;
+		}
+		sleep(5);
+	}
 
 	/* Finish up */
 	syslog(LOG_NOTICE, "terminated");

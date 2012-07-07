@@ -36,6 +36,13 @@ int Control::stoi(std::string s) {
 	return i;
 }
 
+double Control::stod(std::string s) {
+	std::stringstream sStream(s);
+	double d;
+	sStream >> d;
+	return d;
+}
+
 Control::Control() {
 	this->controlPath = "";
 	this->controlName = "";

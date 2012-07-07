@@ -6,21 +6,22 @@
 class Fan : public Control {
 private:
 	std::string fanLabel;
-	int fanSpeedCurrent;
 	int fanMinSpeed;
 	int fanMaxSpeed;
-	std::string checkSpeed(int speed);
+	int planedSpeed;
+	int checkSpeed(int speed);
 public:
 	Fan();
 	Fan(std::string fanPath, std::string fanName);
 	std::string getLabel();
-	int getSpeedCurrent();
+	int getSpeed();
 	int getFanMinSpeed();
 	int getFanMaxSpeed();
 	void setFanMinSpeed(int minSpeed);
 	void setFanMaxSpeed(int maxSpeed);
-	void refresh();
 	bool setSpeed(int speed);
+	int getPlanedSpeed();
+	void setPlanedSpeed(int speed);
 };
 
 #endif

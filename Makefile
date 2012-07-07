@@ -2,7 +2,7 @@ PROJECTNAME=fan
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=
-SOURCES=main.cpp Fan.cpp Control.cpp
+SOURCES=main.cpp Control.cpp Sensor.cpp Fan.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(PROJECTNAME)
 

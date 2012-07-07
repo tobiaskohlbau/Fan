@@ -28,6 +28,7 @@ public:
 	bool writeContent(std::string path, std::string content);
 	std::string itos(int i);
 	int stoi(std::string s);
+	double stod(std::string s);
 };
 
 #endif /* CONTROL_H_ */
