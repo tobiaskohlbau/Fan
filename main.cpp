@@ -1,3 +1,10 @@
+/*
+ *
+ *  Created on: 07.07.2012
+ *	Author: Tobias Kohlbau <tobias.kohlbau@gmail.com>
+ *
+ */
+
 #include <sys/stat.h>
 #include "Fan.h"
 #include "Sensor.h"
