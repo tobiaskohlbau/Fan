@@ -13,7 +13,7 @@
 
 #define DAEMON_LOG "/var/log/fan.log"
 
-#define FANMINSPEED 3500
+#define FANMINSPEED 4000
 //#define FANMAXSPEED 6200
 #define LOACSCALEFROM 0.35
 #define LOADSCALETO 0.45
