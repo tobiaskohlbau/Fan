@@ -5,7 +5,6 @@
  *
  */
 
-
 #include "Control.h"
 
 std::string Control::getContent(std::string path) {
