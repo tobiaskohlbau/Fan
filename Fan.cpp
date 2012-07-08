@@ -1,3 +1,10 @@
+/*
+ *
+ *  Created on: 07.07.2012
+ *	Author: Tobias Kohlbau <tobias.kohlbau@gmail.com>
+ *
+ */
+
 #include "Fan.h"
 
 int Fan::checkSpeed(int speed) {

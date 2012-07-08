@@ -1,8 +1,8 @@
 /*
- * Control.h
  *
  *  Created on: 07.07.2012
- *      Author: tobias
+ *	Author: Tobias Kohlbau <tobias.kohlbau@gmail.com>
+ *
  */
 
 #ifndef CONTROL_H_
