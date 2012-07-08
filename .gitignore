@@ -1,5 +1,6 @@
 fan
 *.*.swp
+*.*~
 
 # Compiled Object files
 *.slo
