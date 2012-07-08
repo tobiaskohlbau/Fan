@@ -11,8 +11,16 @@
 #include "Sensor.h"
 #include "Load.h"
 
-#define LOCK_FILE "/var/lock/fan.lock"
-#define LOG_FILE "/var/log/fan.log"
+#define DAEMON_LOG "/var/log/fan.log"
+
+#define FANMINSPEED 3500
+//#define FANMAXSPEED 6200
+#define LOACSCALEFROM 0.35
+#define LOADSCALETO 0.45
+#define SENSORSCALEFROM 0.55
+#define SENSORSCALETO 0.60
+#define AVERAGECOUNT 3
+#define SLEEPTIME 2
 
 void logToFile(const char *filename, const char *message) {
 	FILE *logFile;
@@ -54,22 +62,11 @@ void startDaemon() {
 	close(STDERR_FILENO);
 }
 
-std::string itos(int i) {
-	std::stringstream iStream;
-	iStream << i;
-	std::string iString = iStream.str();
-	return iString;
-}
-
 std::string dtos(double d) {
 	std::stringstream dStream;
 	dStream << d;
 	std::string dString = dStream.str();
 	return dString;
-}
-
-double calcAverage(double first, double second) {
-	return (first + second) / 2;
 }
 
 int main() {
@@ -87,21 +84,43 @@ int main() {
 
 	fan.writeContent(fan.getPath() + "/" + fan.getName() + "_manual", "1");
 
-	double scaleTo = 0.5;
-	double maxTemp = 75;
+#if FANMINSPEED
+	fan.setFanMinSpeed(FANMINSPEED);
+#endif
+#if FANMAXSPEED
+	fan.setFanMaxSpeed(FANMAXSPEED);
+#endif
 
-	int speedFactor = (fan.getFanMaxSpeed() - fan.getFanMinSpeed()) / scaleTo;
+	int loadFactor = (fan.getFanMaxSpeed() - fan.getFanMinSpeed())
+			/ (LOADSCALETO - LOACSCALEFROM);
+	int sensorFacotor = (fan.getFanMaxSpeed() - fan.getFanMinSpeed())
+			/ (SENSORSCALETO - SENSORSCALEFROM);
 
 	while (1) {
-		fan.setSpeed(fan.getFanMinSpeed() + speedFactor * load.getAverage());
-
-		if (((coreOne.getTemp() / 1000) > maxTemp)
-				|| ((coreTwo.getTemp() / 1000) > maxTemp)) {
-			fan.setSpeed(fan.getFanMaxSpeed());
-			logToFile(LOG_FILE, "Temp to high");
+		double loadAverage = 0;
+		double sensorAverage = 0;
+		for (int i = 0; i < AVERAGECOUNT; i++) {
+			loadAverage += load.getAverage();
+			sensorAverage += (coreOne.getTemp() + coreTwo.getTemp());
+			sleep(SLEEPTIME);
 		}
-		sleep(5);
-	}
 
+		loadAverage = loadAverage / AVERAGECOUNT;
+		sensorAverage = sensorAverage / ((2 * AVERAGECOUNT) * 100000);
+
+		logToFile(DAEMON_LOG, dtos(loadAverage).c_str());
+		logToFile(DAEMON_LOG, dtos(sensorAverage).c_str());
+
+		if (loadAverage > LOACSCALEFROM) {
+			fan.setSpeed(
+					fan.getFanMinSpeed()
+							+ loadFactor * (loadAverage - LOACSCALEFROM));
+		} else {
+			fan.setSpeed(
+					fan.getFanMinSpeed()
+							+ sensorFacotor
+									* (sensorAverage - SENSORSCALEFROM));
+		}
+	}
 	return 0;
 }

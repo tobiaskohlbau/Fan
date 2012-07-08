@@ -20,7 +20,7 @@ Load::Load(std::string loadPath, std::string loadName) {
 double Load::getAverage() {
 	std::string loadOne = getContent(getPath() + "/" + getName());
 	loadOne = loadOne.replace(loadOne.find("  "), loadOne.find("  ") + 1, " ");
-	sleep(1);
+	usleep(500000);
 	std::string loadTwo = getContent(getPath() + "/" + getName());
 	loadTwo = loadTwo.replace(loadTwo.find("  "), loadTwo.find("  ") + 1, " ");
 	std::string one[5];
