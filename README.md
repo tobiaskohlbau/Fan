@@ -1,4 +1,6 @@
 Fan
 ===
 
-Fanspeed control for MacBook Linux
+Fanspeed control for Linux
+
+Could read sensors and calculate loadAverage from /proc/stat
