@@ -10,7 +10,6 @@
 
 #include "Control.h"
 #include <unistd.h>
-#include <iostream>
 
 class Load: public Control {
 private:
