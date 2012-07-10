@@ -14,11 +14,15 @@ EXECUTABLE=$(PROJECTNAME)
 
 all: $(SOURCES) $(EXECUTABLE)
 
+debug: CFLAGS+=-DDEBUG -g -O0
+debug: EXECUTABLE=$(PROJECTNAME)_debug
+debug: $(SOURCES) $(EXECUTABLE)
+
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $(EXECUTABLE)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	rm -rf $(OBJECTS) $(EXECUTABLE)
+	rm -rf $(OBJECTS) $(EXECUTABLE) $(EXECUTABLE)_debug
