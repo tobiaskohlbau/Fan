@@ -65,7 +65,7 @@ std::string dtos(double d) {
 	std::stringstream dStream;
 	dStream << d;
 	std::string dString = dStream.str();
-	return dString;
+	return (dString);
 }
 
 int main() {
@@ -121,5 +121,5 @@ int main() {
 									* (sensorAverage - SENSORSCALEFROM));
 		}
 	}
-	return 0;
+	return (0);
 }

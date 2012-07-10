@@ -5,7 +5,6 @@
  *
  */
 
-
 #include "Control.h"
 
 std::string Control::getContent(std::string path) {
@@ -13,35 +12,35 @@ std::string Control::getContent(std::string path) {
 	std::fstream file(path.c_str(), std::ios::in);
 	getline(file, content);
 	file.close();
-	return content;
+	return (content);
 }
 
 bool Control::writeContent(std::string path, std::string content) {
 	std::fstream file(path.c_str(), std::ios::out);
 	file << content;
 	file.close();
-	return file.good();
+	return (file.good());
 }
 
 std::string Control::itos(int i) {
 	std::stringstream iStream;
 	iStream << i;
 	std::string iString = iStream.str();
-	return iString;
+	return (iString);
 }
 
 int Control::stoi(std::string s) {
 	std::stringstream sStream(s);
 	int i;
 	sStream >> i;
-	return i;
+	return (i);
 }
 
 double Control::stod(std::string s) {
 	std::stringstream sStream(s);
 	double d;
 	sStream >> d;
-	return d;
+	return (d);
 }
 
 Control::Control() {
@@ -55,11 +54,11 @@ Control::Control(std::string controlPath, std::string controlName) {
 }
 
 std::string Control::getPath() {
-	return this->controlPath;
+	return (this->controlPath);
 }
 
 std::string Control::getName() {
-	return this->controlName;
+	return (this->controlName);
 }
 
 void Control::setPath(std::string path) {

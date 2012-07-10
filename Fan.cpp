@@ -11,11 +11,11 @@ int Fan::checkSpeed(int speed) {
 	int minSpeed = getFanMinSpeed();
 	int maxSpeed = getFanMaxSpeed();
 	if (speed < minSpeed) {
-		return minSpeed;
+		return (minSpeed);
 	} else if (speed > maxSpeed) {
-		return maxSpeed;
+		return (maxSpeed);
 	}
-	return speed;
+	return (speed);
 }
 
 Fan::Fan() {
@@ -37,19 +37,19 @@ Fan::Fan(std::string fanPath, std::string fanName) {
 }
 
 std::string Fan::getLabel() {
-	return this->fanLabel;
+	return (this->fanLabel);
 }
 
 int Fan::getSpeed() {
-	return stoi(getContent(getPath() + "/" + getName() + "_input"));
+	return (stoi(getContent(getPath() + "/" + getName() + "_input")));
 }
 
 int Fan::getFanMinSpeed() {
-	return this->fanMinSpeed;
+	return (this->fanMinSpeed);
 }
 
 int Fan::getFanMaxSpeed() {
-	return this->fanMaxSpeed;
+	return (this->fanMaxSpeed);
 }
 
 void Fan::setFanMinSpeed(int minSpeed) {
@@ -61,10 +61,10 @@ void Fan::setFanMaxSpeed(int maxSpeed) {
 }
 
 bool Fan::setSpeed(int speed) {
-	return writeContent(getPath() + "/" + getName() + "_output",
-			itos(checkSpeed(speed)));
+	return (writeContent(getPath() + "/" + getName() + "_output",
+			itos(checkSpeed(speed))));
 }
 
 int Fan::getPlannedSpeed() {
-	return stoi(getContent(getPath() + "/" + getName() + "_output"));
+	return (stoi(getContent(getPath() + "/" + getName() + "_output")));
 }

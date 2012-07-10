@@ -18,9 +18,9 @@ Sensor::Sensor(std::string sensorPath, std::string sensorName) {
 }
 
 std::string Sensor::getLabel() {
-	return getContent(getPath() + "/" + getName() + "_label");
+	return (getContent(getPath() + "/" + getName() + "_label"));
 }
 
 double Sensor::getTemp() {
-	return stod(getContent(getPath() + "/" + getName() + "_input"));
+	return (stod(getContent(getPath() + "/" + getName() + "_input")));
 }

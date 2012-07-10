@@ -37,5 +37,5 @@ double Load::getAverage() {
 			twoComplete += stod(two[i]);
 		}
 	}
-	return 1 - ((stod(one[4]) - stod(two[4])) / (oneComplete - twoComplete));
+	return (1 - ((stod(one[4]) - stod(two[4])) / (oneComplete - twoComplete)));
 }
